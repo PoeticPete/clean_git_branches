@@ -1,0 +1,25 @@
+# This will automatically delete local branches that have been deleted on remote
+
+# Checkout master (since the branch we are on might need to be deleted)
+git checkout -q master
+
+# Pull any new changes (optional but you probably need to do this after merging anyway)
+git pull -q
+
+# Get the deleted branches from origin
+DELETED_REMOTE_BRANCHES=$(git fetch -p 2>&1 | grep "\[deleted\]" | sed -n -e 's/^.*origin\///p')
+
+# Get all local branches
+LOCAL_BRANCHES=$(git branch)
+
+# Delete each local branch that was deleted on origin
+while read branch; do
+  if [[ $DELETED_REMOTE_BRANCHES == *"$branch"* ]]; then
+      git branch -D $branch
+  fi
+done <<< "$LOCAL_BRANCHES"
+
+# Go back to the previous branch (if it was not deleted)
+# Redirect stdout and stderr to dev/null b/c the previous branch might have been deleted
+# And if it was deleted, that is ok.
+git checkout - &> /dev/null
