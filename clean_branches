@@ -1,4 +1,9 @@
-# This will automatically delete local branches that have been deleted on remote
+# This will automatically delete local branches that have been deleted on remote.
+# To set this up:
+# 1. Copy this script to ~/bin/clean_branches
+# 2. Add `PATH=$PATH:$HOME/bin` to your ~/.bash_profile
+# 3. Add `alias clean_branches=". clean_branches" to your ~/.bash_profile
+
 
 # Checkout master (since the branch we are on might need to be deleted)
 git checkout -q master
